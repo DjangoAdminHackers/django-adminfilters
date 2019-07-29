@@ -42,7 +42,7 @@ class MultipleSelectFieldListFilter(FieldListFilter):
             'display': _('All')
         }
         for pk_val, val in self.lookup_choices:
-            selected = pk_val in self.values()
+            selected = pk_val in list(self.values())
             pk_list = set(self.values())
             if selected:
                 pk_list.remove(pk_val)
@@ -71,7 +71,7 @@ class IntersectionFieldListFilter(MultipleSelectFieldListFilter):
     """
 
     def queryset(self, request, queryset):
-        for value in self.values():
+        for value in list(self.values()):
             filter_dct = {
                 self.filter_statement: value
             }
@@ -88,7 +88,7 @@ class UnionFieldListFilter(MultipleSelectFieldListFilter):
 
     def queryset(self, request, queryset):
         filter_statement = "%s__in" % self.filter_statement
-        filter_values = self.values()
+        filter_values = list(self.values())
         filter_dct = {
             filter_statement: filter_values
         }
